@@ -41,18 +41,49 @@ router.post('/', (req, res) => {
       res.status(201).json(newProject)
     })
     .catch(err => {
-      res.status(500).json({ message: 'Error creating project' ,
+      res.status(400).json({ message: 'Error creating project' ,
         stack:err.stack
       })
       
     })
 })
-router.put('/:id',validateProjectId, (req,res) => {
+router.put('/:id', (req, res, ) => {
+  Projects.update(req.params.id, req.body)
+    .then(project => {
+      if (project) {
+        res.status(400).json(project);
+      } else {
+        res.status(400).json({ message: 'Request body is missing name, description' });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).json({ message: 'Error updating the project' });
+    });
+});
+router.delete('/:id', (req, res, next) => {
+  Projects.remove(req.params.id, req.body)
+    .then(project => {
+      if (project) {
+        res.status(200).json(project);
+      } else {
+        res.status(404).json({ message: 'The project could not be found' });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).json({ message: 'Error updating the project' });
+    });
+});
+router.get('/:id/actions', async (req,res,next) => {
+  try {
+    const result = await Projects.getProjectActions(req.params.id)
+    res.json(result)
+  } catch (err) {next(err)}
+}
+)
 
-})
-router.delete('/:id', async (req,res) => {
-  
-})
+
 
 
 module.exports = router;
