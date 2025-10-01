@@ -5,7 +5,6 @@ const  logger = require ('./projects/projects-middleware')
 const projectRouter = require ('./projects/projects-router')
 
 server.use(express.json())
-server.use(logger)
 server.use('/api/projects', projectRouter)
 server.use('/api/actions',actionRouter )
 
